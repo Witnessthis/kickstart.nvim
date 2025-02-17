@@ -33,7 +33,7 @@ return {
         map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
         map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
         map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-        map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+        map('<leader>td', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
         map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
         map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
         map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -82,6 +82,21 @@ return {
       end,
     })
 
+    local cmp = require 'cmp'
+    local cmp_select = { behavior = cmp.SelectBehavior.Select }
+    cmp.setup {
+      mapping = cmp.mapping.preset.insert {
+        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+        ['<C-y>'] = cmp.mapping.confirm { select = true },
+        ['<C-Space>'] = cmp.mapping.complete(),
+      },
+      sources = cmp.config.sources {
+        { name = 'nvim_lsp' },
+        { name = 'buffer' },
+      },
+    }
+
     --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
@@ -93,10 +108,22 @@ return {
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
-      -- clangd = {},
+      clangd = {
+        cmd = {
+          'clangd',
+          '-pretty',
+          '--background-index',
+          '-j=12',
+          '--clang-tidy',
+          '--all-scopes-completion',
+          '--completion-style=detailed',
+          '--header-insertion-decorators',
+          '--header-insertion=iwyu',
+        },
+      },
       -- gopls = {},
       pyright = {},
-      black = {},
+      ruff = {},
       rust_analyzer = {},
       ts_ls = {},
 
