@@ -120,6 +120,9 @@ return {
           '--header-insertion-decorators',
           '--header-insertion=iwyu',
         },
+        capabilities = {
+          offsetEncoding = { 'utf-16' },
+        },
       },
       -- gopls = {},
       pyright = {},
