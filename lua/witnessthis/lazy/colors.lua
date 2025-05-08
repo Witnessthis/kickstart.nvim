@@ -2,8 +2,8 @@ function ColorMyPencils(color)
   color = color or 'gruvbox'
   vim.cmd.colorscheme(color)
 
-  vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-  vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+  vim.api.nvim_set_hl(0, 'Normal', { bg = '' })
+  vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '' })
   vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'orange' })
 end
 
@@ -70,7 +70,11 @@ return {
         inverse = true, -- invert background for search, diffs, statuslines and errors
         contrast = '', -- can be "hard", "soft" or empty string
         palette_overrides = {},
-        overrides = {},
+        overrides = {
+          LspReferenceText = { fg = '#D099E3' },
+          LspReferenceRead = { fg = '#C586DD' },
+          LspReferenceWrite = { fg = '#B973D8' },
+        },
         dim_inactive = false,
         transparent_mode = false,
       }
