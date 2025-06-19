@@ -165,7 +165,7 @@ return {
           -- Define the debugging configurations for cppdbg (C++ debugging with GDB/LLDB)
           config.configurations = {
             {
-              name = 'Launch GDB Remote Debug Session',
+              name = 'Launch GDB Remote Debug Session (Docker)',
               type = 'cppdbg', -- This should be cppdbg as it's the GDB/LLDB debugger adapter
               request = 'launch',
 
@@ -175,9 +175,17 @@ return {
 
               -- The program to launch remotely; replace with your program
               program = function()
+                os.execute [[
+                  python3 /home/jeg/dev-tools/docker_run.py \
+                    -d /home/jeg/git/mdu/ \
+                    -p 2345:2345 \
+                    -c "gdbserver :2345 dc_builddir/application/autopilot/autopilot --cursor" \
+                    --headless > /dev/null 2>&1
+                ]]
+                os.execute [[while ! nc -z localhost 2345; do sleep 0.1; done > /dev/null 2>&1]]
                 local path = vim.fn.input('Default debug application? (n/Y): ', '', 'file')
                 if path == '' or path == 'y' or path == 'Y' then
-                  return '/home/jeg/git/mdu/nvim_builddir/application/autopilot/autopilot'
+                  return '/home/jeg/git/mdu/dc_builddir/application/autopilot/autopilot'
                 else
                   return vim.fn.input('Debug target: ', vim.fn.getcwd() .. '/', 'file')
                 end
