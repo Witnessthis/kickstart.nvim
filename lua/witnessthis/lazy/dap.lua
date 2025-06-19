@@ -68,11 +68,6 @@ return {
     },
 
     config = function()
-      -- load mason-nvim-dap here, after all adapters have been setup
-      if require('lazy.core.config').spec.plugins['mason-nvim-dap.nvim'] ~= nil then
-        require('mason-nvim-dap').setup(get_opts 'mason-nvim-dap.nvim')
-      end
-
       vim.api.nvim_set_hl(0, 'DapStoppedLine', { default = true, link = 'Visual' })
 
       local dap_icons = {
@@ -88,12 +83,6 @@ return {
         vim.fn.sign_define('Dap' .. name, { text = sign[1], texthl = sign[2] or 'DiagnosticInfo', linehl = sign[3], numhl = sign[3] })
       end
 
-      -- -- setup dap config by VsCode launch.json file
-      -- local vscode = require 'dap.ext.vscode'
-      -- local json = require 'plenary.json'
-      -- vscode.json_decode = function(str)
-      --   return vim.json.decode(json.json_strip_comments(str))
-      -- end
       require('dap.ext.vscode').json_decode = require('json5').parse
     end,
   },
