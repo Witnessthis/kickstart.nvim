@@ -175,7 +175,12 @@ return {
 
               -- The program to launch remotely; replace with your program
               program = function()
-                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                local path = vim.fn.input('Default debug application? (n/Y): ', '', 'file')
+                if path == '' or path == 'y' or path == 'Y' then
+                  return '/home/jeg/git/mdu/nvim_builddir/application/autopilot/autopilot'
+                else
+                  return vim.fn.input('Debug target: ', vim.fn.getcwd() .. '/', 'file')
+                end
               end,
 
               -- Working directory for the debugger to use
